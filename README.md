@@ -1,37 +1,96 @@
-# DescreveAI: Imagens em Texto – Gerador de Descrições com IA por JINC.com.br (v1.0.0)
+# DescreveAI: Imagens em Texto (v1.0.0)
 
-"Imagens em Texto" é uma aplicação web que utiliza a API do Google Gemini para analisar imagens e gerar automaticamente textos otimizados, incluindo:
+![Status](https://img.shields.io/badge/Status-Stable-green) ![Version](https://img.shields.io/badge/Version-1.0.0-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-  - *Texto Alternativo (Alt Text):* Descrições concisas para acessibilidade (WCAG).
-  - *Descrição Detalhada:* Explicações completas sobre o conteúdo visual da imagem.
-  - *Palavras-chave de SEO:* Termos relevantes para melhorar a encontrabilidade em mecanismos de busca.
-  - *Análise de Acessibilidade:* Sugestões para melhorar a clareza e o contraste da imagem.
-  - *Legendas para Mídias Sociais:* Textos cativantes prontos para publicação.
+**DescreveAI** é uma aplicação Fullstack que utiliza a API do Google Gemini para gerar descrições acessíveis, SEO e conteúdo social a partir de imagens.
 
-Este projeto foi desenvolvido pela *InclusiveAI* para auxiliar criadores de conteúdo, desenvolvedores e jornalistas a tornar a web mais acessível e inclusiva.
+Desenvolvido para auxiliar criadores de conteúdo e desenvolvedores a tornarem a web mais inclusiva (WCAG).
+
+---
 
 ## ✨ Funcionalidades
 
-  - *Upload de Imagem:* Envie uma imagem diretamente do seu dispositivo.
-  - *Entrada por URL:* Cole um link de uma imagem da web para análise.
-  - *Contexto Adicional:* Forneça informações extras para gerar legendas mais precisas e relevantes.
-  - *Resultados em Abas:* Visualize os diferentes tipos de texto gerados de forma organizada.
-  - *Copiar e Baixar:* Copie facilmente qualquer resultado para a área de transferência ou baixe todos os resultados em um arquivo .txt (Relatório Completo).
-  - *Design Responsivo:* Interface adaptável para desktops e dispositivos móveis.
+- 🖼️ **Análise Visual com IA:** Gera descrições detalhadas usando Gemini 1.5 Flash.
+- ♿ **Foco em Acessibilidade:** Gera Alt Text otimizado para leitores de tela.
+- 📊 **SEO & Social:** Extrai palavras-chave e cria legendas para Instagram/LinkedIn.
+- 📂 **Histórico Local:** Salva todas as análises em banco de dados PostgreSQL.
+- 📥 **Exportação:** Permite baixar o relatório completo em `.txt`.
+- 📱 **Responsivo:** Interface adaptada para Desktop e Mobile.
 
-## 🚀 Tecnologia Utilizada
+---
 
-  - *Frontend:* [React](https://reactjs.org/)
-  - *Estilização:* [Tailwind CSS](https://tailwindcss.com/)
-  - *API de IA:* [Google Gemini](https://ai.google.dev/)
+## 🛠️ Stack Tecnológica
 
-## 📖 Como Usar
+O projeto segue uma arquitetura **Monorepo**:
 
-1.  *Forneça uma Imagem:*
-      - Arraste e solte um arquivo de imagem na área indicada.
-      - Ou clique na área para selecionar um arquivo do seu computador.
-2.  *Gere as Descrições:*
-      - Clique no botão *"Gerar Descrições"*.
-3.  *Visualize e Utilize os Resultados:*
-      - Navegue pelas abas para ver o texto alternativo, a descrição detalhada, as palavras-chave, etc.
-      - Use o botão de cópia em cada aba.
+* **Frontend (`/web`):** React, Vite, TailwindCSS, Lucide React.
+* **Backend (`/server`):** Node.js, Express, Google Generative AI SDK.
+* **Banco de Dados:** PostgreSQL (via Docker).
+* **Infraestrutura:** Docker Compose (Rede Bridge).
+
+---
+
+## 🚀 Como Rodar o Projeto
+
+### Pré-requisitos
+* Node.js (v18+)
+* Docker & Docker Compose (para o Banco de Dados)
+* Chave de API do Google Gemini ([Obter aqui](https://aistudio.google.com/))
+
+### 1. Configuração do Ambiente
+
+Clone o repositório:
+```bash
+git clone [https://github.com/jornalistainclusivo/descreve-ai.git](https://github.com/jornalistainclusivo/descreve-ai.git)
+cd descreve-ai
+````
+
+Instale todas as dependências (Front e Back):
+
+```bash
+npm run install-all
+```
+
+### 2\. Configuração do Banco de Dados (Docker)
+
+Suba o container do PostgreSQL:
+
+```bash
+# Certifique-se de que o Docker está rodando
+docker-compose up -d
+```
+
+### 3\. Variáveis de Ambiente (.env)
+
+Crie um arquivo `.env` dentro da pasta `/server` com as suas credenciais:
+
+```ini
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=jinc_user
+DB_PASS=SuaSenhaAqui
+DB_NAME=descreveai_db
+GEMINI_API_KEY=Sua_Chave_Google_Aqui
+```
+
+### 4\. Executar
+
+Inicie o Frontend e o Backend simultaneamente:
+
+```bash
+npm run dev
+```
+
+Acesse: `http://localhost:5173`
+
+-----
+
+## 🤝 Contribuição
+
+Este projeto é mantido pela **InclusiveAI / Jornalista Inclusivo**.
+Sinta-se à vontade para abrir Issues ou Pull Requests.
+
+-----
+
+© 2025 JINC.com.br
