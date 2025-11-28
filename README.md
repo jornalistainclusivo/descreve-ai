@@ -10,7 +10,7 @@ Desenvolvido para auxiliar criadores de conteúdo e desenvolvedores a tornarem a
 
 ## ✨ Funcionalidades
 
-- 🖼️ **Análise Visual com IA:** Gera descrições detalhadas usando Gemini 1.5 Flash.
+- 🖼️ **Análise Visual com IA:** Gera descrições detalhadas usando Gemini 2.5 Pro.
 - ♿ **Foco em Acessibilidade:** Gera Alt Text otimizado para leitores de tela.
 - 📊 **SEO & Social:** Extrai palavras-chave e cria legendas para Instagram/LinkedIn.
 - 📂 **Histórico Local:** Salva todas as análises em banco de dados PostgreSQL.
