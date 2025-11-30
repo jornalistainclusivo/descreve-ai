@@ -8,10 +8,13 @@
     },
     "dependencies": {
         "@google/generative-ai": "^0.24.1",
+        "@prisma/client": "^6.19.0",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
-        "multer": "^2.0.2",
-        "pg": "^8.11.5"
+        "multer": "^2.0.2"
+    },
+    "devDependencies": {
+        "prisma": "^6.19.0"
     }
 }

@@ -2,20 +2,11 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { Pool } = require('pg');
+const prisma = require('../lib/prisma');
 
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-// Database Connection (reusing env vars)
-const pool = new Pool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-});
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -61,31 +52,27 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
         // Parse JSON to ensure it's valid before saving/sending
         const analysisData = JSON.parse(jsonText);
 
-        // 3. Save to Database
-        const client = await pool.connect();
-        try {
-            // Ensure table exists
-            await client.query(`
-        CREATE TABLE IF NOT EXISTS descriptions (
-          id SERIAL PRIMARY KEY,
-          image_name TEXT,
-          ai_text TEXT,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-      `);
+        // 3. Save to Database using Prisma
+        // Note: We are saving the individual fields now instead of a raw JSON blob, 
+        // or we could map them to the schema we defined.
+        // The schema has: imageName, altText, detailedDescription, seoKeywords, accessibilityAnalysis, socialPost
 
-            // Insert record (saving JSON as string in ai_text column)
-            const insertQuery = 'INSERT INTO descriptions (image_name, ai_text) VALUES ($1, $2) RETURNING *';
-            const dbResult = await client.query(insertQuery, [req.file.originalname, JSON.stringify(analysisData)]);
+        const dbRecord = await prisma.description.create({
+            data: {
+                imageName: req.file.originalname,
+                altText: analysisData.alt_text,
+                detailedDescription: analysisData.detailed_description,
+                seoKeywords: JSON.stringify(analysisData.seo_keywords), // Storing array as string/JSON
+                accessibilityAnalysis: analysisData.accessibility_analysis,
+                socialPost: analysisData.social_post
+            }
+        });
 
-            res.json({
-                success: true,
-                data: analysisData,
-                db_record: dbResult.rows[0]
-            });
-        } finally {
-            client.release();
-        }
+        res.json({
+            success: true,
+            data: analysisData,
+            db_record: dbRecord
+        });
 
     } catch (error) {
         console.error('Erro na análise:', error);

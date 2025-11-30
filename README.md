@@ -17,29 +17,6 @@ Desenvolvido para auxiliar criadores de conteúdo e desenvolvedores a tornarem a
 - 📥 **Exportação:** Permite baixar o relatório completo em `.txt`.
 - 📱 **Responsivo:** Interface adaptada para Desktop e Mobile.
 
----
-
-## 🛠️ Stack Tecnológica
-
-O projeto segue uma arquitetura **Monorepo**:
-
-* **Frontend (`/web`):** React, Vite, TailwindCSS, Lucide React.
-* **Backend (`/server`):** Node.js, Express, Google Generative AI SDK.
-* **Banco de Dados:** PostgreSQL (via Docker).
-* **Infraestrutura:** Docker Compose (Rede Bridge).
-
----
-
-## 🚀 Como Rodar o Projeto
-
-### Pré-requisitos
-* Node.js (v18+)
-* Docker & Docker Compose (para o Banco de Dados)
-* Chave de API do Google Gemini ([Obter aqui](https://aistudio.google.com/))
-
-### 1. Configuração do Ambiente
-
-Clone o repositório:
 ```bash
 git clone [https://github.com/jornalistainclusivo/descreve-ai.git](https://github.com/jornalistainclusivo/descreve-ai.git)
 cd descreve-ai
@@ -84,13 +61,13 @@ npm run dev
 
 Acesse: `http://localhost:5173`
 
------
+---
 
 ## 🤝 Contribuição
 
 Este projeto é mantido pela **InclusiveAI / Jornalista Inclusivo**.
 Sinta-se à vontade para abrir Issues ou Pull Requests.
 
------
+---
 
 © 2025 JINC.com.br

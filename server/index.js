@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
+const prisma = require('./lib/prisma');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,27 +10,21 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Database Connection
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-});
-
 // Routes
 const analyzeRoute = require('./routes/analyze');
 app.use('/api', analyzeRoute);
+
 app.get('/api/status', async (req, res) => {
   try {
-    const client = await pool.connect();
-    const result = await client.query('SELECT NOW()');
-    client.release();
+    // Test DB connection
+    await prisma.$connect();
+    // Optional: Run a simple query
+    const result = await prisma.$queryRaw`SELECT NOW()`;
+
     res.json({
       status: 'Sucesso',
-      message: 'Conectado ao PostgreSQL',
-      timestamp: result.rows[0].now
+      message: 'Conectado ao Banco de Dados (Prisma)',
+      timestamp: result[0].now
     });
   } catch (err) {
     console.error('Erro ao conectar no banco:', err);
