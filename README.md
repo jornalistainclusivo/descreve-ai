@@ -43,9 +43,9 @@ O projeto segue uma arquitetura **Monorepo**:
 Clone o repositório:
 
 ```bash
-git clone [https://github.com/jornalistainclusivo/descreve-ai.git](https://github.com/jornalistainclusivo/descreve-ai.git)
+git clone https://github.com/jornalistainclusivo/descreve-ai.git
 cd descreve-ai
-````
+```
 
 Instale todas as dependências (Front, Back e Prisma):
 
@@ -64,7 +64,7 @@ docker-compose up -d
 
 ### 3\. Variáveis de Ambiente (.env)
 
-Crie um arquivo `.env` dentro da pasta `/server`.
+Edite o arquivo `.env` dentro da pasta `/server`.
 **Importante:** Este projeto usa Prisma, então a conexão é via URL única.
 
 ```ini
@@ -102,7 +102,7 @@ Acesse: `http://localhost:5173`
 
 ## 🤝 Contribuição
 
-Este projeto é mantido pela **InclusiveAI / Jornalista Inclusivo**.
+Este projeto é mantido pela **JINC.com.br / @JornalistaInclusivo / @CriaCorpo / Dando Flor**.
 Sinta-se à vontade para abrir Issues ou Pull Requests.
 
 ---
