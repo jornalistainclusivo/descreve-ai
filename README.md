@@ -1,6 +1,8 @@
-# DescreveAI: Imagens em Texto (v1.1.0)
+# DescreveAI: Imagens em Texto (v0.2.0-pre-alpha)
 
-![Status](https://img.shields.io/badge/Status-Stable-green) ![Version](https://img.shields.io/badge/Version-1.1.0-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
+> **🚧 PRE-ALPHA:** Este software está em desenvolvimento ativo. Funcionalidades podem mudar sem aviso prévio. Não recomendado para uso em produção crítica.
+
+![Status](https://img.shields.io/badge/Status-Pre--Alpha-orange) ![Version](https://img.shields.io/badge/Version-0.2.0--pre--alpha-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 **DescreveAI** é uma aplicação Fullstack que utiliza a API do Google Gemini para gerar descrições acessíveis, SEO e conteúdo social a partir de imagens.
 

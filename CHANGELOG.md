@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0-pre-alpha (Reclassificação)
+
+- **Ciclo de Vida:** Projeto movido para estágio Pre-alpha para refletir o desenvolvimento contínuo de funcionalidades.
+- **Nota:** A versão foi ajustada de 1.1.0 para 0.2.0 para aderir ao Semantic Versioning (0.x.x = Instável/Dev).
+
 ## v1.1.0 (2025-11-30)
 
 - **Infraestrutura:** Migração completa da camada de banco de dados para **Prisma ORM**.
