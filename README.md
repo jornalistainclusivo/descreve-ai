@@ -1,18 +1,24 @@
 # DescreveAI: Imagens em Texto (v0.2.0-pre-alpha)
 
-> **🚧 PRE-ALPHA:** Este software está em desenvolvimento ativo. Funcionalidades podem mudar sem aviso prévio. Não recomendado para uso em produção crítica.
+> **🚧 PRE-ALPHA:** Este software está em desenvolvimento ativo.
+> Funcionalidades podem mudar sem aviso prévio. Não recomendado para uso em
+> produção crítica.
 
-![Status](https://img.shields.io/badge/Status-Pre--Alpha-orange) ![Version](https://img.shields.io/badge/Version-0.2.0--pre--alpha-blue) ![License](https://img.shields.io/badge/License-MIT-yellow)
+![Status](https://img.shields.io/badge/Status-Pre--Alpha-orange)
+![Version](https://img.shields.io/badge/Version-0.2.0--pre--alpha-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-**DescreveAI** é uma aplicação Fullstack que utiliza a API do Google Gemini para gerar descrições acessíveis, SEO e conteúdo social a partir de imagens.
+**DescreveAI** é uma aplicação Fullstack que utiliza a API do Google Gemini
+para gerar descrições acessíveis, SEO e conteúdo social a partir de imagens.
 
-Desenvolvido para auxiliar criadores de conteúdo e desenvolvedores a tornarem a web mais inclusiva (WCAG).
+Desenvolvido para auxiliar criadores de conteúdo e desenvolvedores a
+tornarem a web mais inclusiva (WCAG).
 
 ---
 
 ## ✨ Funcionalidades
 
-- 🖼️ **Análise Visual com IA:** Gera descrições detalhadas usando modelos Google Gemini Pro/Flash.
+- 🖼️ **Análise Visual com IA:** Gera descrições detalhadas com modelos Google Gemini Pro/Flash.
 - ♿ **Foco em Acessibilidade:** Gera Alt Text otimizado para leitores de tela.
 - 📊 **SEO & Social:** Extrai palavras-chave e cria legendas para Instagram/LinkedIn.
 - 📂 **Histórico Local:** Salva todas as análises em banco de dados PostgreSQL (via Prisma ORM).
@@ -47,7 +53,7 @@ Clone o repositório:
 ```bash
 git clone https://github.com/jornalistainclusivo/descreve-ai.git
 cd descreve-ai
-```
+````
 
 Instale todas as dependências (Front, Back e Prisma):
 
@@ -63,6 +69,52 @@ Suba o container do PostgreSQL:
 # Certifique-se de que o Docker está rodando
 docker-compose up -d
 ```
+
+> **Nota sobre a Infraestrutura:**
+> Este comando subirá dois containers definidos no `docker-compose.yml`:
+>
+> - **PostgreSQL:** Banco de dados (Porta 5432).
+> - **Adminer:** Interface visual para gerenciar o banco (Acessível em `http://localhost:8080`).
+
+<details><summary>📄 Ver arquivo docker-compose.yml de referência</summary>
+
+```yaml
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: always
+    container_name: jinc_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - jinc_network
+
+  adminer:
+    image: adminer
+    restart: always
+    container_name: jinc_adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - jinc_network
+
+volumes:
+  postgres_data:
+
+networks:
+  jinc_network:
+    external: true
+```
+
+</details>
 
 ### 3\. Variáveis de Ambiente (.env)
 
@@ -109,4 +161,4 @@ Sinta-se à vontade para abrir Issues ou Pull Requests.
 
 ---
 
-2025 JINC.com.br
+© 2025 JINC.com.br
