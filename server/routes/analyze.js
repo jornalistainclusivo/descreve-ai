@@ -1,39 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+
 const prisma = require('../lib/prisma');
 
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 
 router.post('/analyze', upload.single('image'), async (req, res) => {
-    console.log('Tentando usar API Key:', process.env.GEMINI_API_KEY ? 'Chave Presente' : 'Chave Ausente');
+
     try {
-        if (!process.env.GEMINI_API_KEY) {
-            return res.status(500).json({ error: 'Chave da API do Gemini não configurada' });
+        if (!process.env.OPENAI_API_KEY) {
+            return res.status(500).json({ error: 'Chave da API da OpenAI não configurada' });
         }
 
         if (!req.file) {
             return res.status(400).json({ error: 'Nenhuma imagem enviada' });
         }
 
-        // 1. Prepare image for Gemini
-        const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-pro",
-            generationConfig: { responseMimeType: "application/json" }
-        });
+        const OpenAI = require('openai');
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-        const imagePart = {
-            inlineData: {
-                data: req.file.buffer.toString('base64'),
-                mimeType: req.file.mimetype,
-            },
-        };
+        // 1. Prepare image for OpenAI
+        const base64Image = req.file.buffer.toString('base64');
+        const dataUrl = `data:${req.file.mimetype};base64,${base64Image}`;
 
         // 2. Generate content
         const prompt = `Analise esta imagem e retorne APENAS um objeto JSON com a seguinte estrutura, sem markdown:
@@ -45,18 +38,32 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
           "social_post": "Legenda cativante para Instagram/LinkedIn com emojis."
         }`;
 
-        const result = await model.generateContent([prompt, imagePart]);
-        const response = await result.response;
-        const jsonText = response.text();
+        const response = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [
+                {
+                    role: "user",
+                    content: [
+                        { type: "text", text: prompt },
+                        {
+                            type: "image_url",
+                            image_url: {
+                                "url": dataUrl,
+                            },
+                        },
+                    ],
+                },
+            ],
+            response_format: { type: "json_object" },
+            max_tokens: 1000,
+        });
+
+        const jsonText = response.choices[0].message.content;
 
         // Parse JSON to ensure it's valid before saving/sending
         const analysisData = JSON.parse(jsonText);
 
         // 3. Save to Database using Prisma
-        // Note: We are saving the individual fields now instead of a raw JSON blob, 
-        // or we could map them to the schema we defined.
-        // The schema has: imageName, altText, detailedDescription, seoKeywords, accessibilityAnalysis, socialPost
-
         const dbRecord = await prisma.description.create({
             data: {
                 imageName: req.file.originalname,

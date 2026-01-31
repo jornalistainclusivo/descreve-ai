@@ -8,7 +8,7 @@
 ![Version](https://img.shields.io/badge/Version-0.2.0--pre--alpha-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-**DescreveAI** é uma aplicação Fullstack que utiliza a API do Google Gemini
+**DescreveAI** é uma aplicação Fullstack que utiliza a **API da OpenAI (GPT-4o)**
 para gerar descrições acessíveis, SEO e conteúdo social a partir de imagens.
 
 Desenvolvido para auxiliar criadores de conteúdo e desenvolvedores a
@@ -18,7 +18,7 @@ tornarem a web mais inclusiva (WCAG).
 
 ## ✨ Funcionalidades
 
-- 🖼️ **Análise Visual com IA:** Gera descrições detalhadas com modelos Google Gemini Pro/Flash.
+- 🖼️ **Análise Visual com IA:** Gera descrições detalhadas com modelo **OpenAI GPT-4o-mini**.
 - ♿ **Foco em Acessibilidade:** Gera Alt Text otimizado para leitores de tela.
 - 📊 **SEO & Social:** Extrai palavras-chave e cria legendas para Instagram/LinkedIn.
 - 📂 **Histórico Local:** Salva todas as análises em banco de dados PostgreSQL (via Prisma ORM).
@@ -32,7 +32,7 @@ tornarem a web mais inclusiva (WCAG).
 O projeto segue uma arquitetura **Monorepo**:
 
 - **Frontend (`/web`):** React, Vite, TailwindCSS, Lucide React.
-- **Backend (`/server`):** Node.js, Express, Google Generative AI SDK.
+- **Backend (`/server`):** Node.js, Express, OpenAI SDK.
 - **Banco de Dados:** PostgreSQL (gerenciado via Prisma ORM).
 - **Infraestrutura:** Docker Compose.
 
@@ -44,7 +44,7 @@ O projeto segue uma arquitetura **Monorepo**:
 
 - Node.js (v18 ou superior)
 - Docker & Docker Compose (para o Banco de Dados)
-- Chave de API do Google Gemini ([Obter aqui](https://aistudio.google.com/))
+- Chave de API da OpenAI (GPT-4o-mini) ([Obter aqui](https://platform.openai.com/account/api-keys))
 
 ### 1. Configuração do Ambiente
 
@@ -129,7 +129,7 @@ PORT=3000
 DATABASE_URL="postgresql://jinc_user:SuaSenhaAqui@localhost:5432/descreveai_db?schema=public"
 
 # Chave da IA
-GEMINI_API_KEY=Sua_Chave_Google_Aqui
+OPENAI_API_KEY=sk-...
 ```
 
 ### 4\. Inicializar o Banco
