@@ -8,7 +8,7 @@
 ![Version](https://img.shields.io/badge/Version-0.2.0--pre--alpha-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-**DescreveAI** é uma aplicação Fullstack que utiliza a **API da OpenAI (GPT-4o)**
+**DescreveAI** é uma aplicação Fullstack que utiliza a **API da OpenAI (GPT-4o-mini)**
 para gerar descrições acessíveis, SEO e conteúdo social a partir de imagens.
 
 Desenvolvido para auxiliar criadores de conteúdo e desenvolvedores a
