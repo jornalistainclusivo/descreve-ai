@@ -9,6 +9,10 @@
     "web": "cd web && npm run dev"
   },
   "devDependencies": {
+    "baseline-browser-mapping": "^2.9.19",
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "openai": "^6.17.0"
   }
 }
