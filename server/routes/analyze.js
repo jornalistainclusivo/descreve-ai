@@ -6,29 +6,35 @@ const prisma = require('../lib/prisma');
 
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // Limite de 10MB aprovado
+    fileFilter: (req, file, cb) => {
+        // Strict file type validation (Apenas Imagens)
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('SECURITY_ERROR: Arquivo inválido. Apenas imagens são permitidas.'));
+        }
+    }
+});
 
 
 
 router.post('/analyze', upload.single('image'), async (req, res) => {
 
     try {
-        if (!process.env.OPENAI_API_KEY) {
-            return res.status(500).json({ error: 'Chave da API da OpenAI não configurada' });
-        }
-
         if (!req.file) {
             return res.status(400).json({ error: 'Nenhuma imagem enviada' });
         }
-
-        const OpenAI = require('openai');
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        
+        const aiGateway = require('../services/aiGateway');
 
         // 1. Prepare image for OpenAI
         const base64Image = req.file.buffer.toString('base64');
         const dataUrl = `data:${req.file.mimetype};base64,${base64Image}`;
 
-        // 2. Generate content
+        // 2. Generate content via Gateway
         const prompt = `Analise esta imagem e retorne APENAS um objeto JSON com a seguinte estrutura, sem markdown:
         {
           "alt_text": "Texto alternativo curto (máx 125 chars) focado em WCAG.",
@@ -38,30 +44,7 @@ router.post('/analyze', upload.single('image'), async (req, res) => {
           "social_post": "Legenda cativante para Instagram/LinkedIn com emojis."
         }`;
 
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [
-                {
-                    role: "user",
-                    content: [
-                        { type: "text", text: prompt },
-                        {
-                            type: "image_url",
-                            image_url: {
-                                "url": dataUrl,
-                            },
-                        },
-                    ],
-                },
-            ],
-            response_format: { type: "json_object" },
-            max_tokens: 1000,
-        });
-
-        const jsonText = response.choices[0].message.content;
-
-        // Parse JSON to ensure it's valid before saving/sending
-        const analysisData = JSON.parse(jsonText);
+        const analysisData = await aiGateway.analyzeImage(dataUrl, prompt);
 
         // 3. Save to Database using Prisma
         const dbRecord = await prisma.description.create({
