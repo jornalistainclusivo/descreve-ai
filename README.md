@@ -1,4 +1,6 @@
-# DescreveAI: Imagens em Texto (v0.2.0-pre-alpha)
+# Descreve aí: Imagens em Texto (v0.2.0-pre-alpha)
+
+![Interface do Descreve aí apresentando a análise de um ícone de acessibilidade em fundo azul.](./assets/screenshot.png "Descreve aí - Acessibilidade visual com IA")
 
 > **🚧 PRE-ALPHA:** Este software está em desenvolvimento ativo.
 > Funcionalidades podem mudar sem aviso prévio. Não recomendado para uso em
@@ -120,17 +122,21 @@ networks:
 ### 3\. Variáveis de Ambiente (.env)
 
 Edite o arquivo `.env` dentro da pasta `/server`.
-**Importante:** Este projeto usa Prisma, então a conexão é via URL única.
+**Importante:** Este projeto usa Prisma, então a conexão é via URL única. O AI Gateway cuida do proxy com diferentes arquiteturas.
 
 ```ini
 PORT=3000
 
 # Conexão com Banco de Dados (PostgreSQL)
-# Formato: postgresql://USUARIO:SENHA@HOST:PORTA/BANCO?schema=public
 DATABASE_URL="postgresql://USUARIO:SENHA@IP_DO_LAB:5432/BANCO?schema=public"
 
-# Chave da IA
-OPENAI_API_KEY=SUA_CHAVE_AQUI
+# Arquitetura AI Gateway (Resiliência e Fallback)
+ACTIVE_LLM_PROVIDER="openai" # ou "openrouter1" ou "groq"
+
+# Chaves de API Necessárias
+OPENAI_API_KEY="sk-..."
+OPENROUTER_API_KEY="sk-or-v1-..."
+GROQ_API_KEY="gsk-..."
 ```
 
 ### 4\. Inicializar o Banco
@@ -157,9 +163,9 @@ Acesse: `http://localhost:5173`
 
 ## 🤝 Contribuição
 
-Este projeto é mantido pela **JINC.com.br / @JornalistaInclusivo / @CriaCorpo / Dando Flor**.
+Este projeto é mantido pela **JINC Apps / @jornalistainclusivo / @criacorpo / @dandoflor.br**.
 Sinta-se à vontade para abrir Issues ou Pull Requests.
 
 ---
 
-© 2025 JINC.com.br
+© 2026 JINC Apps
