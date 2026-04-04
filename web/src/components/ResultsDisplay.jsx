@@ -12,8 +12,8 @@ export default function ResultsDisplay({ data }) {
     const [copied, setCopied] = useState(null);
 
     const tabs = [
-        { id: 'alt_text', label: 'Acessibilidade', icon: Accessibility },
-        { id: 'detailed_description', label: 'Detalhes', icon: FileText },
+        { id: 'alt_text', label: 'Alt Text', icon: Accessibility },
+        { id: 'detailed_description', label: 'Descrição', icon: FileText },
         { id: 'seo_keywords', label: 'SEO', icon: Search },
         { id: 'social_post', label: 'Social', icon: Share2 },
         { id: 'accessibility_analysis', label: 'Análise', icon: Eye },

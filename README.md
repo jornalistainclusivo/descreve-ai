@@ -61,20 +61,21 @@ Instale todas as dependências (Front, Back e Prisma):
 npm run install-all
 ```
 
-### 2\. Configuração do Banco de Dados (Docker)
+### 2\. Configuração do Banco de Dados (VM Lab)
 
-Suba o container do PostgreSQL:
+**Aviso de Arquitetura:** O projeto adota uma arquitetura de banco de dados
+distribuída para o desenvolvimento. O `docker-compose.yml` que provê a
+infraestrutura não deve ser rodado localmente se você estiver na rede
+conectada ao **ubuntu-lab**.
 
-```bash
-# Certifique-se de que o Docker está rodando
-docker-compose up -d
-```
+Os serviços já estão ativos na VM (`192.168.0.111`):
 
-> **Nota sobre a Infraestrutura:**
-> Este comando subirá dois containers definidos no `docker-compose.yml`:
->
-> - **PostgreSQL:** Banco de dados (Porta 5432).
-> - **Adminer:** Interface visual para gerenciar o banco (Acessível em `http://localhost:8080`).
+- **PostgreSQL:** `192.168.0.111:5432`
+- **Adminer:** `http://192.168.0.111:8080`
+
+*Se você estiver desenvolvendo fora da rede do laboratório*, utilize o bloco
+de configuração abaixo em um `docker-compose.yml` local e execute
+`docker-compose up -d`.
 
 <details><summary>📄 Ver arquivo docker-compose.yml de referência</summary>
 
@@ -126,10 +127,10 @@ PORT=3000
 
 # Conexão com Banco de Dados (PostgreSQL)
 # Formato: postgresql://USUARIO:SENHA@HOST:PORTA/BANCO?schema=public
-DATABASE_URL="postgresql://jinc_user:SuaSenhaAqui@localhost:5432/descreveai_db?schema=public"
+DATABASE_URL="postgresql://USUARIO:SENHA@IP_DO_LAB:5432/BANCO?schema=public"
 
 # Chave da IA
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=SUA_CHAVE_AQUI
 ```
 
 ### 4\. Inicializar o Banco

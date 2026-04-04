@@ -8,7 +8,7 @@ function App() {
             <div className="flex-grow py-10 px-4">
                 <div className="max-w-4xl mx-auto">
                     <header className="text-center mb-10">
-                        <h1 className="text-4xl font-extrabold text-blue-900 mb-2">Descreve.ai</h1>
+                        <h1 className="text-4xl font-extrabold text-blue-900 mb-2">Descreve aí</h1>
                         <p className="text-gray-600">Acessibilidade visual com Inteligência Artificial</p>
                     </header>
 
