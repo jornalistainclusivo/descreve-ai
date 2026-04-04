@@ -1,7 +1,30 @@
+# Dependências
 node_modules/
+
+# Configurações e Logs
 .env
+.env.*
+!.env.example
+!.env.exemple
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Builds
 dist/
+build/
+
+# Banco de Dados Local
+*.sqlite
+*.sqlite3
+*.db
+
+# Sistema e IDEs
 .DS_Store
+.vscode/
+.idea/
+
+# Agentes Locais (JINC DevTools)
 .agent
 .agent/
 .agents

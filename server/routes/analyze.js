@@ -6,7 +6,18 @@ const prisma = require('../lib/prisma');
 
 // Configure Multer for memory storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // Limite de 10MB aprovado
+    fileFilter: (req, file, cb) => {
+        // Strict file type validation (Apenas Imagens)
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('SECURITY_ERROR: Arquivo inválido. Apenas imagens são permitidas.'));
+        }
+    }
+});
 
 
 
