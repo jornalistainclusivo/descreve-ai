@@ -20,8 +20,9 @@ const upload = multer({
 });
 
 
+const authMiddleware = require('../middleware/auth');
 
-router.post('/analyze', upload.single('image'), async (req, res) => {
+router.post('/analyze', authMiddleware, upload.single('image'), async (req, res) => {
 
     try {
         if (!req.file) {
