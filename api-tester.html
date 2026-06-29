@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descreve Aí - Tester API (Zero-Trust)</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f9fafb; color: #111827; }
+        .card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        h1 { font-size: 1.5rem; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; }
+        button { background: #2563eb; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #1d4ed8; }
+        button:disabled { background: #9ca3af; cursor: not-allowed; }
+        #result { margin-top: 20px; padding: 15px; background: #1f2937; color: #10b981; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; display: none; }
+        .error { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Descreve Aí - Teste de API (Zero-Trust)</h1>
+        <p>Use esta interface para testar o envio de imagens para o backend via API.</p>
+
+        <div class="form-group">
+            <label for="url">Endpoint da API:</label>
+            <input type="text" id="url" value="http://localhost:3000/api/analyze">
+        </div>
+
+        <div class="form-group">
+            <label for="token">API Token (Zero-Trust):</label>
+            <input type="text" id="token" value="jinc_dev_token">
+        </div>
+
+        <div class="form-group">
+            <label for="image">Selecione a Imagem:</label>
+            <input type="file" id="image" accept="image/*">
+        </div>
+
+        <button id="btn-status" type="button" style="background:#059669; margin-right: 10px;">Verificar Servidor (Status)</button>
+        <button id="btn-submit" type="button">Analisar Imagem com IA</button>
+
+        <pre id="result"></pre>
+    </div>
+
+    <script>
+        const btnStatus = document.getElementById('btn-status');
+        const btnSubmit = document.getElementById('btn-submit');
+        const resultPre = document.getElementById('result');
+
+        btnStatus.addEventListener('click', async () => {
+            resultPre.style.display = 'block';
+            resultPre.style.color = '#10b981';
+            resultPre.textContent = 'Verificando status do servidor (http://localhost:3000/api/status)...';
+            try {
+                const response = await fetch('http://localhost:3000/api/status');
+                const data = await response.json();
+                resultPre.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultPre.style.color = '#ef4444';
+                resultPre.textContent = 'Erro ao conectar ao servidor.\nVerifique se o Docker está rodando.\n\n' + err.message;
+            }
+        });
+
+        btnSubmit.addEventListener('click', async () => {
+            const fileInput = document.getElementById('image');
+            const url = document.getElementById('url').value;
+            const token = document.getElementById('token').value;
+
+            if (!fileInput.files.length) {
+                alert('Selecione uma imagem primeiro!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            resultPre.style.display = 'block';
+            resultPre.style.color = '#10b981';
+            resultPre.textContent = 'Enviando imagem para a IA... (Isso pode levar de 5 a 20 segundos)';
+            btnSubmit.disabled = true;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultPre.style.color = '#10b981';
+                    resultPre.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    resultPre.style.color = '#ef4444';
+                    resultPre.textContent = `Erro HTTP ${response.status}:\n\n` + JSON.stringify(data, null, 2);
+                }
+            } catch (err) {
+                resultPre.style.color = '#ef4444';
+                resultPre.textContent = 'Erro na requisição.\n\nDetalhes: ' + err.message;
+            } finally {
+                btnSubmit.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

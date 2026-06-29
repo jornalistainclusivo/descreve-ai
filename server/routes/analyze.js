@@ -34,18 +34,29 @@ router.post('/analyze', authMiddleware, upload.single('image'), async (req, res)
         // 1. Prepare image for OpenAI
         const base64Image = req.file.buffer.toString('base64');
         const dataUrl = `data:${req.file.mimetype};base64,${base64Image}`;
+        
+        console.log(`[API] Imagem recebida: ${req.file.originalname}, Tamanho: ${req.file.size} bytes, Mime: ${req.file.mimetype}`);
+        if (base64Image.length < 100) {
+            throw new Error(`Imagem corrompida ou muito pequena (Base64 length: ${base64Image.length})`);
+        }
 
         // 2. Generate content via Gateway
-        const prompt = `Analise esta imagem e retorne APENAS um objeto JSON com a seguinte estrutura, sem markdown:
-        {
-          "alt_text": "Texto alternativo curto (máx 125 chars) focado em WCAG.",
-          "detailed_description": "Descrição visual completa e detalhada.",
-          "seo_keywords": ["lista", "de", "5", "tags", "relevantes"],
-          "accessibility_analysis": "Dicas breves sobre contraste e clareza da imagem.",
-          "social_post": "Legenda cativante para Instagram/LinkedIn com emojis."
-        }`;
+        const prompt = `Analise esta imagem e retorne APENAS um objeto JSON válido, com a seguinte estrutura:
+{
+  "alt_text": "Texto alternativo curto (máx 125 chars).",
+  "detailed_description": "Descrição visual completa e detalhada.",
+  "seo_keywords": ["keyword1", "keyword2"],
+  "accessibility_analysis": "Dicas breves de contraste.",
+  "social_post": "Legenda cativante."
+}`;
 
+        console.log(`[API] Solicitando análise à IA...`);
         const analysisData = await aiGateway.analyzeImage(dataUrl, prompt);
+
+        // Validação da saída da IA
+        if (!analysisData.alt_text) {
+             throw new Error("IA retornou JSON inválido (alt_text ausente).");
+        }
 
         // 3. Save to Database using Prisma
         const dbRecord = await prisma.description.create({
@@ -58,6 +69,9 @@ router.post('/analyze', authMiddleware, upload.single('image'), async (req, res)
                 socialPost: analysisData.social_post
             }
         });
+
+        console.log(`[API] Sucesso! IA gerou o Alt Text: "${analysisData.alt_text}"`);
+        console.log(`[API] Enviando resposta para o WordPress (DB ID: ${dbRecord.id})...`);
 
         res.json({
             success: true,

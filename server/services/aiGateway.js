@@ -29,10 +29,21 @@ class AiGateway {
             throw new Error(`API Key missing for configured provider.`);
         }
 
-        return new OpenAI({
+        const config = { 
             apiKey: apiKey,
-            baseURL: providerConfig.getBaseUrl()
-        });
+            maxRetries: 0 // Fail fast. Não queremos que a SDK retente silenciosamente (causa "hang")
+        };
+        const baseUrl = providerConfig.getBaseUrl();
+        
+        if (baseUrl) {
+            config.baseURL = baseUrl;
+            config.defaultHeaders = {
+                'HTTP-Referer': process.env.SITE_URL || 'http://localhost:3000',
+                'X-Title': 'Descreve AI Gateway'
+            };
+        }
+
+        return new OpenAI(config);
     }
 
     async _attemptAnalysis(providerName, dataUrl, prompt) {
@@ -44,6 +55,12 @@ class AiGateway {
         try {
             const client = this._getClient(config);
             
+            console.log(`[AI Gateway] [${providerName}] Enviando payload para a API (Aguardando resposta...)`);
+            
+            // Timeout via AbortController (Bulletproof)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), this.timeoutLimit);
+
             const response = await client.chat.completions.create({
                 model: config.model,
                 messages: [
@@ -53,7 +70,10 @@ class AiGateway {
                             { type: "text", text: prompt },
                             {
                                 type: "image_url",
-                                image_url: { "url": dataUrl },
+                                image_url: { 
+                                    url: dataUrl,
+                                    detail: "low"
+                                },
                             },
                         ],
                     },
@@ -61,13 +81,19 @@ class AiGateway {
                 response_format: { type: "json_object" },
                 max_tokens: 1000,
             }, {
-                timeout: this.timeoutLimit // Strict SDK-level timeout
+                signal: controller.signal
             });
 
-            return response.choices[0].message.content;
+            clearTimeout(timeoutId);
+            console.log(`[AI Gateway] [${providerName}] Resposta recebida da API!`);
+
+            const content = response.choices[0].message.content;
+            if (!content) throw new Error("Empty response from LLM");
+            
+            return content;
 
         } catch (error) {
-            const isTimeout = error.code === 'ETIMEDOUT' || error.type === 'timeout' || error.message?.toLowerCase().includes('timeout');
+            const isTimeout = error.name === 'AbortError' || error.code === 'ETIMEDOUT' || error.type === 'timeout' || error.message?.toLowerCase().includes('timeout') || error.message?.toLowerCase().includes('aborted');
             
             if (isTimeout) {
                 console.error(`[AI Gateway] Timeout on ${providerName} (${this.timeoutLimit}ms exceeded).`);
