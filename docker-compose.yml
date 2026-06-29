@@ -1,0 +1,37 @@
+services:
+  api:
+    build:
+      context: ./server
+    container_name: descreveai_backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env
+    environment:
+      # Sobrescreve a variável de ambiente para usar o banco local ao invés do IP da VM
+      - DATABASE_URL=postgresql://jinc_user:Jinc2025@db:5432/descreveai_db?schema=public
+    depends_on:
+      - db
+    networks:
+      - descreveai_net
+
+  db:
+    image: postgres:15-alpine
+    container_name: descreveai_db
+    environment:
+      POSTGRES_USER: jinc_user
+      POSTGRES_PASSWORD: Jinc2025
+      POSTGRES_DB: descreveai_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - descreveai_net
+
+networks:
+  descreveai_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
