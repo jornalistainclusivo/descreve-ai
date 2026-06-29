@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.5.0-main] - 2026-06-29
+
+### Adicionado
+
+- **Plugin as a Service (PaaS):** O backend agora funciona nativamente como um AI Gateway para o plugin WP Acessível JINC.
+- **Robust Image Processing:** Rota `/api/analyze` aprimorada para suportar upload direto de imagens (`multipart/form-data`) via `multer`.
+- **Database Integration:** Resultados da análise agora são persistidos no banco de dados via Prisma, com tracking do status (`Success`).
+- **Memory Optimization:** Buffer em memória implementado para evitar vazamento de disco durante uploads temporários de imagens pelo WordPress.
+
 ## v0.2.0-pre-alpha (Reclassificação)
 
 - **Ciclo de Vida:** Projeto movido para estágio Pre-alpha para refletir o desenvolvimento contínuo de funcionalidades.

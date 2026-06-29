@@ -26,6 +26,16 @@ tornarem a web mais inclusiva (WCAG).
 - 📂 **Histórico Local:** Salva todas as análises em banco de dados PostgreSQL (via Prisma ORM).
 - 📥 **Exportação:** Permite baixar o relatório completo em `.txt`.
 - 📱 **Responsivo:** Interface adaptada para Desktop e Mobile.
+- 🔌 **Plugin as a Service (PaaS):** Atua nativamente como AI Gateway aceitando uploads diretos (`multipart/form-data`) para o plugin WP Acessível JINC.
+
+---
+
+## 📚 Documentação (PaaS API)
+
+Consulte a documentação técnica gerada abaixo para instruções de integração sistêmica com o ecossistema JINC:
+
+- [Product Requirements Document (PRD)](docs/PRD.md)
+- [Referência da API (Endpoint `/api/analyze`)](docs/API_Reference.md)
 
 ---
 
